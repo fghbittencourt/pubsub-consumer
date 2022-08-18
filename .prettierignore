@@ -1,0 +1,10 @@
+# Ignore artifacts:
+build
+coverage
+dist
+.history
+node_modules
+.github
+terraform
+src/repositories/postgresDb/migrations
+ormconfig.js
