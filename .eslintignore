@@ -1,0 +1,5 @@
+/*.js
+node_modules
+dist
+src/repositories/postgresDb/migrations
+ormconfig.js

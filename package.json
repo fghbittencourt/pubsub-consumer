@@ -1,0 +1,61 @@
+{
+  "name": "pubsub-consumer",
+  "version": "1.0.0",
+  "description": "GCP PubSub Consumer wrapper",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": ["dist/**/*"],
+  "repository": "https://github.com/fghbittencourt/pubsub-consumer.git",
+  "bugs": {
+    "url": "https://github.com/fghbittencourt/pubsub-consumer/issues"
+  },
+  "homepage": "https://github.com/fghbittencourt/pubsub-consumer",
+  "author": "Fernando Bittencourt <aaronmorlocks@gmail.com>",
+  "license": "Apache-2.0",
+  "keywords": [
+    "gcp",
+    "pubsub",
+    "queue",
+    "consumer"
+  ],
+  "scripts": {
+    "start": "node ./dist/index.js",
+    "dev": "ts-node-dev --clear --inspect --transpile-only --ignore node_modules -r dotenv/config src/index.ts service:",
+    "test": "jest --silent --maxWorkers=2",
+    "build": "tsc",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "lint": "eslint . --ext .ts",
+    "lint:fix": "eslint . --fix",
+    "prepare": "npm run build",
+    "prepublishOnly" : "npm test && npm run lint",
+    "preversion" : "npm run lint",
+    "version" : "npm run format && git add -A src",
+    "postversion" : "git push && git push --tags",
+    "bump" : "npm version patch",
+    "publish": "npm publish"
+  },
+  "devDependencies": {
+    "@types/faker": "^5.5.8",
+    "@types/jest": "^27.0.1",
+    "@typescript-eslint/eslint-plugin": "^4.29.0",
+    "@typescript-eslint/parser": "^4.29.0",
+    "eslint": "^7.32.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-import-resolver-typescript": "^2.4.0",
+    "eslint-plugin-import": "^2.23.4",
+    "eslint-plugin-json": "^3.0.0",
+    "eslint-plugin-prettier": "^3.4.0",
+    "faker": "5.5.3",
+    "fishery": "^1.4.0",
+    "jest": "^27.0.6",
+    "prettier": "^2.3.2",
+    "ts-jest": "^27.0.5",
+    "ts-node-dev": "^1.1.8",
+    "typescript": "^4.7.4"
+  },
+  "dependencies": {
+    "dotenv": "^10.0.0",
+    "reflect-metadata": "^0.1.13"
+  }
+}

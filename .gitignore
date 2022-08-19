@@ -1,0 +1,13 @@
+node_modules
+dist
+npm-debug.log
+.env
+.DS_Store
+coverage
+logs
+.vscode
+.idea
+.history
+.TODO
+yarn-error.log
+*.log
