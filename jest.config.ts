@@ -8,6 +8,5 @@ export default {
   roots: ['<rootDir>/src/', '<rootDir>/tests/'],
   transformIgnorePatterns: ['<rootDir>/tests/integration'],
   testMatch: ['**/tests/unit/**/*.test.ts'],
-  setupFilesAfterEnv: ['./tests/jest.setup.ts'],
   testEnvironment: 'node'
 };
