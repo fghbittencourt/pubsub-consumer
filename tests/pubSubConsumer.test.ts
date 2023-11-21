@@ -15,10 +15,13 @@ describe('PubSubConsumer Testing', () => {
   });
 
   it('requires a subscriptionName to be set', async () => {
-    const opts = { subscriptionName: '', handleMessage: emptyHandler };
+    const opts = {
+      subscriptionName: '',
+      handleMessage: emptyHandler
+    };
 
     await expect(PubSubConsumer.create(opts)).rejects.toThrow(
-      'Missing option subscriptionName'
+      'Missing subscriptionName in options'
     );
   });
 
