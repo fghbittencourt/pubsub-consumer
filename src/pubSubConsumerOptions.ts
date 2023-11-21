@@ -1,7 +1,7 @@
 import { v1 } from '@google-cloud/pubsub';
 import { ReceivedMessage } from './types';
 
-export default interface PubSubConsumerOpts {
+export default interface PubSubConsumerOptions {
   subscriptionName: string;
   handleMessage(message: ReceivedMessage): Promise<void>;
   stopped?: boolean;
