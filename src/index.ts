@@ -1,1 +1,3 @@
-console.log('Hello World');
+import Logger from './logger';
+
+Logger.debug('Hello World');
