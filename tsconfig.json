@@ -1,4 +1,3 @@
-/* Visit https://aka.ms/tsconfig.json to read more about this file */
 {
   "compilerOptions": {
     "target": "es6",
@@ -8,7 +7,7 @@
     "strict": true,
     "useUnknownInCatchVariables": false,
     "typeRoots": ["./types", "./node_modules/@types"],
-    "types": ["node", "reflect-metadata", "jest"],
+    "types": ["node", "jest"],
     "esModuleInterop": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
