@@ -3,14 +3,14 @@ import { v1 } from '@google-cloud/pubsub';
 import { once } from 'events';
 import PubSubConsumer from '../src/pubSubConsumer';
 import { ReceivedMessage } from '../src/types';
-import mockedPubSubClient from './mockedPubSubClient';
+import mockedPubSubConsumer from './mockedPubSubConsumer';
 
 describe('PubSubConsumer Testing', () => {
-  let pubSubClient: v1.SubscriberClient;
+  let pubSubConsumer: v1.SubscriberClient;
   let emptyHandler: (message: ReceivedMessage) => Promise<void>;
 
   beforeEach(() => {
-    pubSubClient = mockedPubSubClient();
+    pubSubConsumer = mockedPubSubConsumer;
     emptyHandler = jest.fn();
   });
 
@@ -83,11 +83,11 @@ describe('PubSubConsumer Testing', () => {
         ]
       }
     ];
-    pubSubClient.pull = jest.fn().mockReturnValue(response);
+    pubSubConsumer.pull = jest.fn().mockReturnValue(response);
     const opts = {
       subscriptionName: faker.datatype.string(),
       handleMessage: emptyHandler,
-      subscriberClient: pubSubClient
+      subscriberClient: pubSubConsumer
     };
     // Doing explicit cast to access event emitter methods
     const consumer = (await PubSubConsumer.create(opts)) as PubSubConsumer;
@@ -122,11 +122,11 @@ describe('PubSubConsumer Testing', () => {
         ]
       }
     ];
-    pubSubClient.pull = jest.fn().mockReturnValue(response);
+    pubSubConsumer.pull = jest.fn().mockReturnValue(response);
     const opts = {
       subscriptionName: faker.datatype.string(),
       handleMessage: emptyHandler,
-      subscriberClient: pubSubClient
+      subscriberClient: pubSubConsumer
     };
     // Doing explicit cast to access event emitter methods
     const consumer = (await PubSubConsumer.create(opts)) as PubSubConsumer;
@@ -154,14 +154,14 @@ describe('PubSubConsumer Testing', () => {
         ]
       }
     ];
-    pubSubClient.pull = jest.fn().mockReturnValue(response);
+    pubSubConsumer.pull = jest.fn().mockReturnValue(response);
     const tooLongHandler = jest.fn().mockImplementation(async () => {
       await new Promise(resolve => setTimeout(resolve, 10000));
     });
     const opts = {
       subscriptionName: faker.datatype.string(),
       handleMessage: tooLongHandler,
-      subscriberClient: pubSubClient,
+      subscriberClient: pubSubConsumer,
       handleMessageTimeout: 500
     };
     // Doing explicit cast to access event emitter methods
@@ -195,14 +195,14 @@ describe('PubSubConsumer Testing', () => {
         ]
       }
     ];
-    pubSubClient.pull = jest.fn().mockReturnValue(response);
+    pubSubConsumer.pull = jest.fn().mockReturnValue(response);
     const errorHandler = jest
       .fn()
       .mockRejectedValueOnce(new Error('Some handler error'));
     const opts = {
       subscriptionName: faker.datatype.string(),
       handleMessage: errorHandler,
-      subscriberClient: pubSubClient,
+      subscriberClient: pubSubConsumer,
       handleMessageTimeout: 500
     };
     // Doing explicit cast to access event emitter methods
@@ -223,13 +223,13 @@ describe('PubSubConsumer Testing', () => {
   });
 
   it(`should handle a pulling error properly`, async () => {
-    pubSubClient.pull = jest
+    pubSubConsumer.pull = jest
       .fn()
       .mockRejectedValue(() => new Error('Some pull error'));
     const opts = {
       subscriptionName: faker.datatype.string(),
       handleMessage: emptyHandler,
-      subscriberClient: pubSubClient
+      subscriberClient: pubSubConsumer
     };
     // Doing explicit cast to access event emitter methods
     const consumer = (await PubSubConsumer.create(opts)) as PubSubConsumer;
@@ -239,7 +239,7 @@ describe('PubSubConsumer Testing', () => {
     const [resultError] = await Promise.all([pullingError]);
     await consumer.stop();
 
-    expect(pubSubClient.pull).toHaveBeenCalledTimes(1);
+    expect(pubSubConsumer.pull).toHaveBeenCalledTimes(1);
     expect(emptyHandler).not.toHaveBeenCalled();
     expect(resultError).toBeDefined();
   });

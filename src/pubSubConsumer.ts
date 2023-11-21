@@ -115,7 +115,7 @@ export default class PubSubConsumer extends EventEmitter {
     }
   };
 
-  #hasMessages = async (
+  static #hasMessages = async (
     response: protos.google.pubsub.v1.IPullResponse
   ): Promise<boolean> => {
     return !!response.receivedMessages?.length;
@@ -158,7 +158,7 @@ export default class PubSubConsumer extends EventEmitter {
     Logger.debug('Received response', response);
 
     if (response) {
-      if (await this.#hasMessages(response)) {
+      if (await PubSubConsumer.#hasMessages(response)) {
         await Promise.all(response.receivedMessages!.map(this.#processMessage));
 
         this.emit('responseProcessed', response);
