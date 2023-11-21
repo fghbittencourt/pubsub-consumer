@@ -1,6 +1,10 @@
 import { protos, v1 } from '@google-cloud/pubsub';
 import { google } from '@google-cloud/pubsub/build/protos/protos';
 import { EventEmitter } from 'events';
+import {
+  DEFAULT_BATCH_SIZE,
+  DEFAULT_POLLING_WAITING_INTERVAL
+} from './defaultArguments';
 import Logger from './logger/logger';
 import PubSubConsumerOpts from './pubSubConsumerOptions';
 import pubSubTimeout, { TimeoutError } from './timeoutError';
@@ -11,10 +15,11 @@ export default class PubSubConsumer extends EventEmitter {
     super();
     this.#subscriptionName = options.subscriptionName;
     this.#handleMessage = options.handleMessage;
-    this.#handleMessageTimeout = options.handleMessageTimeout || 20000;
+    this.#handleMessageTimeout = options.handleMessageTimeout;
     this.#stopped = true;
-    this.#batchSize = options.batchSize || 1;
-    this.#pollingWaitTimeMs = options.pollingWaitTimeMs ?? 100;
+    this.#batchSize = options.batchSize || DEFAULT_BATCH_SIZE;
+    this.#pollingWaitIntervalMs =
+      options.pollingWaitIntervalMs ?? DEFAULT_POLLING_WAITING_INTERVAL;
     this.#subscriberClient =
       options.subscriberClient || new v1.SubscriberClient();
   }
@@ -86,13 +91,13 @@ export default class PubSubConsumer extends EventEmitter {
 
   #handleMessage: (message: ReceivedMessage) => Promise<void>;
 
-  #handleMessageTimeout: number;
+  #handleMessageTimeout: number | undefined;
 
   #stopped: boolean;
 
   #batchSize: number;
 
-  #pollingWaitTimeMs: number;
+  #pollingWaitIntervalMs: number;
 
   #subscriberClient: v1.SubscriberClient;
 
@@ -137,7 +142,7 @@ export default class PubSubConsumer extends EventEmitter {
       this.emit('pullingError', error);
     }
 
-    setTimeout(this.#poll, this.#pollingWaitTimeMs);
+    setTimeout(this.#poll, this.#pollingWaitIntervalMs);
   };
 
   #pullMessages = async (
@@ -184,13 +189,13 @@ export default class PubSubConsumer extends EventEmitter {
   };
 
   #executeHandler = async (message: ReceivedMessage): Promise<void> => {
-    let timeout;
     let pending;
+    let timeout;
     try {
       if (this.#handleMessageTimeout) {
         const result = pubSubTimeout(this.#handleMessageTimeout);
-        timeout = result.timeout;
         pending = result.pending;
+        timeout = result.timeout;
 
         await Promise.race([this.#handle(message), pending]);
       } else {

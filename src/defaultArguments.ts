@@ -1,0 +1,2 @@
+export const DEFAULT_POLLING_WAITING_INTERVAL = 100;
+export const DEFAULT_BATCH_SIZE = 1;

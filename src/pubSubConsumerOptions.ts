@@ -7,6 +7,6 @@ export default interface PubSubConsumerOpts {
   stopped?: boolean;
   batchSize?: number;
   handleMessageTimeout?: number;
-  pollingWaitTimeMs?: number;
+  pollingWaitIntervalMs?: number;
   subscriberClient?: v1.SubscriberClient;
 }
